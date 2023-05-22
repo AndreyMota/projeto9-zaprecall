@@ -1,26 +1,125 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from './res/logo.png';
+import { GlobalStyle, ImgSty, NPlay, InPlay } from './Styles';
+import { RxCrossCircled } from 'react-icons/rx';
+import { AiFillQuestionCircle, AiFillCheckCircle } from 'react-icons/ai';
 
-import { GlobalStyle, ImgSty, StyQst, NPlay } from './Styles';
-
-
-
-export default function App() {
+function App() {
+  const [flip, setFlip] = useState("carta");
+  const [dsb, setDsb] = useState(false);
   const lst = [
     {
       id: 1,
+      apertou: false,
       perg: `pergunta1`,
-      play: {q: 'O que é JSX?', r: 'Uma extensão de linguagem do JavaScript'}
+      play: {q: 'O que é JSX?', r: 'Uma extensão de linguagem do JavaScript'},
+      situ: 0
     },
     {
       id: 2,
+      apertou: false,
       perg: ``,
-      play: {q: 'O que é JSX?', r: 'Uma extensão de linguagem do JavaScript'}
+      play: { q: "O React é __", r: "Uma biblioteca JavaScript para construção de interfaces" },
+      situ: 0
+    },
+    {
+      id: 3,
+      apertou: false,
+      perg: ``,
+      play: { q: "Componentes devem iniciar com __", r: "Letra maiúscula" },
+      situ: 0
+    },
+    {
+      id: 4,
+      apertou: false,
+      perg: ``,
+      play: { q: "Podemos colocar __ dentro do JSX", r: "expressões" },
+      situ: 0
+    },
+    {
+      id: 5,
+      apertou: false,
+      perg: ``,
+      play: { q: "O ReactDOM nos ajuda __", r: "Interagindo com a DOM para colocar componentes React na mesma" },
+      situ: 0
+    }
+    ,
+    {
+      id: 6,
+      apertou: false,
+      perg: ``,
+      play: { q: "Usamos props para __", r: "Passar diferentes informações para componentes" },
+      situ: 0
+    },
+    {
+      id: 7,
+      apertou: false,
+      perg: ``,
+      play: { q: "Usamos o npm para __", r: "Gerenciar os pacotes necessários e suas dependências" },
+      situ: 0
+    },
+    {
+      id: 8,
+      apertou: false,
+      perg: ``,
+      play:  {q: "Usamos estado (state) para __", r: "Dizer para o React quais informações quando atualizadas devem renderizar a tela novamente" },
+      situ: 0
     }
   ];
 
   for (let i = 1; i < lst.length; i++) {
     lst[i].perg = `pergunta${lst[i - 1].id + 1}`;
+  }
+  const [Lsd, setLsd] = useState([...lst]);
+
+  
+  function card(aid) {
+    setDsb(true);
+    console.log(typeof(aid));
+    let novo = [...Lsd];
+    novo.forEach(x => {
+      console.log(x.id);
+      if (x.id === aid) {
+        console.log('Entrou');
+        x.apertou = true;
+      }
+    })
+    setLsd([...novo]);
+    console.log(novo);
+  }
+  
+  function virar() {
+    if (flip === "carta") {
+      setFlip("carta flip");
+    }
+    
+    if (flip === "carta flip") {
+      setFlip("carta");
+    }
+  }
+
+  function handleClick(event, aid) {
+    let bt = event.target.textContent;
+    let novo = [...Lsd];
+    novo.forEach(x => {
+      console.log(x.id);
+      if (x.id === aid) {
+        console.log('Entrou');
+        if (bt === "Não lembrei") {
+          x.situ = 1;
+        }
+        if (bt === "Quase não lembrei") {
+          x.situ = 2;
+        }
+        if (bt === "Zap!") {
+          x.situ = 3;
+        }
+        x.apertou = false;
+      }
+    })
+    setDsb(false);
+    setLsd([...novo]);
+    console.log(novo);
   }
 
 
@@ -34,13 +133,59 @@ export default function App() {
         </div>
 
         <div className='questions'>
-          {lst.map(x => {
-            return (
-              <NPlay>
-                <p>{x.perg}</p>
-                <button>Play</button>
-              </NPlay>
-            )
+          {Lsd.map(x => {
+            let aid = x.id;
+            if (x.apertou === true) {
+              const p = x.play;
+              return (
+                <div className={flip} onClick={() => virar()}>
+                  <InPlay className='face front' onClick="">
+                    <p>{p.r}</p>
+                    <div className="bts">
+                      <button className='botaum bcvermei' onClick={(event) => handleClick(event, x.id)}>Não lembrei</button>
+                      <button className='botaum bcyelou' onClick={(event) => handleClick(event, x.id)}>Quase não lembrei</button>
+                      <button className='botaum bcgrin' onClick={(event) => handleClick(event, x.id)}>Zap!</button>
+                    </div>
+                  </InPlay>
+                  <InPlay className='face back' onClick="">
+                    <p>{p.q}</p>
+                  </InPlay>
+                </div>
+              )
+            }
+            if (x.situ === 0) {
+              return (
+                <NPlay>
+                  <p>{x.perg}</p>
+                  <button disabled={dsb} onClick={() => card(aid)}>Play</button>
+                </NPlay>
+              )
+            }
+            if (x.situ === 1) {
+              return (
+                <NPlay>
+                  <p className='risco vermei' >{x.perg}</p>
+                  <RxCrossCircled className='tamain vermei icmargin'></RxCrossCircled>
+                </NPlay>
+              )
+            }
+            if (x.situ === 2) {
+              return (
+                <NPlay>
+                  <p className='risco yelou' >{x.perg}</p>
+                  <AiFillQuestionCircle className='tamain yelou icmargin'></AiFillQuestionCircle>
+                </NPlay>
+              )
+            }
+            if (x.situ === 3) {
+              return (
+                <NPlay>
+                  <p className='risco grin' >{x.perg}</p>
+                  <AiFillCheckCircle className='tamain grin icmargin'></AiFillCheckCircle>
+                </NPlay>
+              )
+            }
+            
           })}
         </div>
       </div>
@@ -49,63 +194,4 @@ export default function App() {
   )
 }
 
-
-
-
-/* const StyImgLogo = styled.div`
-  img {
-    width: 52px;
-    heigth: 60px;
-    margin-right: 20px;
-  }
-`
-
-const StyIndex = styled.div`
-
-
-
-body {
-  
-}
-
-.top {
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-` */
+export default App;
