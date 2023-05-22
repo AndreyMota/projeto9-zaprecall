@@ -8,6 +8,7 @@ body {
     min-width: 320px;
     min-height: 100vh;
     background-color: #FB6B6B;
+    margin-bottom: 80px;
 }
 
 .App {
@@ -125,6 +126,20 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.contador {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Recursive', sans-seriff;
+    font-weight: 400;
+    background-color: rgba(255, 255, 255, 1);
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
 }
 `;
 

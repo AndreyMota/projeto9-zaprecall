@@ -3,10 +3,12 @@ import Logo from './res/logo.png';
 import { GlobalStyle, ImgSty, NPlay, InPlay } from './Styles';
 import { RxCrossCircled } from 'react-icons/rx';
 import { AiFillQuestionCircle, AiFillCheckCircle } from 'react-icons/ai';
+import { HiOutlinePlay } from 'react-icons/hi2';
 
 function App() {
   const [flip, setFlip] = useState("carta");
   const [dsb, setDsb] = useState(false);
+  const [rsp, setRsp] = useState(0);
   const lst = [
     {
       id: 1,
@@ -118,6 +120,7 @@ function App() {
       }
     })
     setDsb(false);
+    setRsp(rsp + 1);
     setLsd([...novo]);
     console.log(novo);
   }
@@ -138,55 +141,59 @@ function App() {
             if (x.apertou === true) {
               const p = x.play;
               return (
-                <div className={flip} onClick={() => virar()}>
-                  <InPlay className='face front' onClick="">
-                    <p>{p.r}</p>
+                <div data-test="turn-btn" className={flip} onClick={() => virar()}>
+                  <InPlay className='face front'>
+                    <p data-test="flashcard-text">{p.r}</p>
                     <div className="bts">
-                      <button className='botaum bcvermei' onClick={(event) => handleClick(event, x.id)}>Não lembrei</button>
-                      <button className='botaum bcyelou' onClick={(event) => handleClick(event, x.id)}>Quase não lembrei</button>
-                      <button className='botaum bcgrin' onClick={(event) => handleClick(event, x.id)}>Zap!</button>
+                      <button data-test="no-btn" className='botaum bcvermei' onClick={(event) => handleClick(event, x.id)}>Não lembrei</button>
+                      <button data-test="partial-btn" className='botaum bcyelou' onClick={(event) => handleClick(event, x.id)}>Quase não lembrei</button>
+                      <button data-test="zap-btn" className='botaum bcgrin' onClick={(event) => handleClick(event, x.id)}>Zap!</button>
                     </div>
                   </InPlay>
-                  <InPlay className='face back' onClick="">
-                    <p>{p.q}</p>
+                  <InPlay className='face back'>
+                    <p data-test="flashcard-text">{p.q}</p>
                   </InPlay>
                 </div>
               )
             }
             if (x.situ === 0) {
               return (
-                <NPlay>
-                  <p>{x.perg}</p>
-                  <button disabled={dsb} onClick={() => card(aid)}>Play</button>
+                <NPlay data-test="flashcard">
+                  <p data-test="flashcard-text">{x.perg}</p>
+                  <button data-test="play-btn" disabled={dsb} onClick={() => card(aid)}><HiOutlinePlay className='tamain'></HiOutlinePlay></button>
                 </NPlay>
               )
             }
             if (x.situ === 1) {
               return (
-                <NPlay>
-                  <p className='risco vermei' >{x.perg}</p>
-                  <RxCrossCircled className='tamain vermei icmargin'></RxCrossCircled>
+                <NPlay data-test="flashcard">
+                  <p data-test="flashcard-text" className='risco vermei' >{x.perg}</p>
+                  <RxCrossCircled data-test="no-icon" className='tamain vermei icmargin'></RxCrossCircled>
                 </NPlay>
               )
             }
             if (x.situ === 2) {
               return (
-                <NPlay>
-                  <p className='risco yelou' >{x.perg}</p>
-                  <AiFillQuestionCircle className='tamain yelou icmargin'></AiFillQuestionCircle>
+                <NPlay data-test="flashcard">
+                  <p data-test="flashcard-text" className='risco yelou' >{x.perg}</p>
+                  <AiFillQuestionCircle data-test="partial-icon" className='tamain yelou icmargin'></AiFillQuestionCircle>
                 </NPlay>
               )
             }
             if (x.situ === 3) {
               return (
-                <NPlay>
-                  <p className='risco grin' >{x.perg}</p>
-                  <AiFillCheckCircle className='tamain grin icmargin'></AiFillCheckCircle>
+                <NPlay data-test="flashcard">
+                  <p data-test="flashcard-text" className='risco grin' >{x.perg}</p>
+                  <AiFillCheckCircle data-test="zap-icon" className='tamain grin icmargin'></AiFillCheckCircle>
                 </NPlay>
               )
             }
             
           })}
+        </div>
+
+        <div data-test="footer" className="contador">
+          <p>{rsp}/{lst.length}</p>
         </div>
       </div>
 
